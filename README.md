@@ -1,50 +1,111 @@
-# AI-Powered Smart Glasses for Assistive Technology
+# AI Smart Glasses Project
 
-This repository contains the source code for an AI-powered smart glasses prototype designed to assist visually impaired individuals. The project uses real-time computer vision and voice feedback to describe the user's surroundings.
+A computer vision and AI-powered smart glasses system to assist visually impaired users by providing real-time environmental context, object detection, voice feedback, and face/person recognition. This repository contains both TensorFlow Lite and YOLOv8 object detection pipelines, scripts for different use-cases, and setup documentation for various environments including Raspberry Pi.
 
-This project was developed in two main stages, showcasing an evolution from a basic implementation to a more advanced, high-performance system.
+---
 
-## Project Versions
+## Features
 
-This repository contains two distinct versions of the application:
+- **Real-Time Object Detection:** Supports detection via both TensorFlow Lite (efficient for edge devices) and Ultralytics YOLOv8 (for advanced/fast detection).
+- **Multiple Input Modes:** Scripts to work with images, video files, and live webcam/camera input.
+- **Voice Feedback & Interaction:** Designed to give audio feedback for each detected object/person and answer questions via basic voice commands.
+- **Distance Estimation:** Basic distance estimation for recognized objects.
+- **Face Recognition:** (For YOLOv8 advanced versions) Extendable to identify known people using face datasets.
+- **Cross-Platform:** Can be deployed and tested on PC or configured for Raspberry Pi.
 
-### 1. **V1 - TensorFlow Lite Implementation**
--   **Location:** `/v1_tflite_implementation`
--   **Description:** The initial version of the project, built using a pre-trained SSD-MobileNet model on the TensorFlow Lite framework. It provides basic object detection.
--   **Performance:** A functional baseline, suitable for low-power devices but with noticeable latency.
+---
 
-### 2. **V2 - YOLOv8 Implementation**
--   **Location:** `/v2_yolov8_implementation`
--   **Description:** The current, advanced version of the project. It uses the state-of-the-art YOLOv8 model for significantly faster and more accurate object detection.
--   **Core Features:**
-    -   Real-time object detection and distance estimation.
-    -   Interactive Q&A mode via voice commands ("What do you see?", "How far is the person?").
-    -   Facial recognition for known individuals.
-    -   Optical Character Recognition (OCR) to read text.
--   **This is the recommended version to run.**
+## Directory & Important Files
 
-## Setup and Usage
-For instructions on how to set up and run each version, please refer to the `README.md` file located inside each respective implementation folder.
-```
+- `coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/` – Pre-trained TFLite model files and label map for legacy detection (TensorFlow Lite).
+- `doc/` – System/project-related documentation.
+- `tflite1-env/` – Example of Python virtual environment (not needed in repo, recommended to `.gitignore`).
+- `README.md` – This project overview.
+- `Raspberry_Pi_Guide.md` – Instructions/setup for Raspberry Pi deployment.
+- `Result Video 1.mp4`, `Video 2.mp4` – Test/demo videos.
+- **TF Lite Scripts:**
+    - `TFLite_detection_image.py` – Run object detection on an image.
+    - `TFLite_detection_video.py` – Run detection on a video file.
+    - `TFLite_detection_webcam.py` – Run detection live via a webcam/camera.
+- **YOLOv8 Script:**
+    - `YOLOV8_ADVANCED.py` – Advanced detection and assistive features using Ultralytics YOLOv8.
+- `auto.py` – [Clarify function or remove if sample/test only.]
+- `get_pi_requirements.sh` – Bash script to install dependencies for Pi deployment.
+- `overview` – [Clarify/useful or remove if not needed.]
+- `test1.jpg`, `yolov8n.pt` – Example image and YOLOv8 model weights.
 
-### **Step 3: Create a Universal `.gitignore` and `requirements.txt`**
+---
 
-In the main `AI-Smart-Glasses` folder, create:
-1.  **A `.gitignore` file:** This should contain rules to ignore cache, virtual environments, and large model files (`*.pt`).
-2.  **A `requirements.txt` file:** This should list the libraries needed for the more advanced **YOLOv8 version**, as it includes all the dependencies of the TFLite version and more. Run `pip freeze > requirements.txt` from a terminal where you have the V2 dependencies installed.
+## Setup
 
-### **Step 4: Create a New Repository and Upload**
+1. **Clone this repository:**
+    ```
+    git clone https://github.com/lakshya051/AISMARTGLASSES.git
+    cd AISMARTGLASSES
+    ```
 
-Now, you can upload this organized folder to a fresh GitHub repository using the web interface, which is the most direct method.[1]
+2. **(Optional) Set up a Python virtual environment:**
+    ```
+    python -m venv smartglasses-env
+    source smartglasses-env/bin/activate   # On Windows: smartglasses-env\\Scripts\\activate
+    ```
 
-1.  **Go to GitHub.com** and click the "**+**" icon in the top-right corner, then select "**New repository**".[2]
-2.  **Name your repository** `AI-Smart-Glasses`.
-3.  **Do NOT** check the box to add a README, .gitignore, or license. You have already created these.
-4.  Click "**Create repository**".[2]
-5.  On the new repository page, you will see a "Quick setup" section. Look for the link that says "**uploading an existing file**". Click it.[3]
-6.  **Drag and drop** your entire `AI-Smart-Glasses` folder (along with all its contents and sub-folders) onto the page.
-7.  Wait for all the files to upload.
-8.  Add a commit message like "Initial commit: Add V1 (TFLite) and V2 (YOLOv8) versions".
-9.  Click "**Commit changes**".[4]
+3. **Install dependencies:**
+    ```
+    pip install -r requirements.txt
+    # For face recognition & YOLOv8 you may also need:
+    pip install face_recognition ultralytics
+    # For TFLite:
+    pip install tflite-runtime pillow numpy opencv-python
+    ```
 
-Your repository is now live with a clean, professional structure that clearly presents both versions of your project in a single `main` branch.
+4. **Download/prep the models:**  
+   TensorFlow Lite models are provided in `coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/`.  
+   Download `yolov8n.pt` from [Ultralytics](https://github.com/ultralytics/ultralytics) or use the one provided.
+
+---
+
+## Usage
+
+### **TensorFlow Lite:**
+- On Image:  
+    `python TFLite_detection_image.py`
+- On Video:  
+    `python TFLite_detection_video.py`
+- On Webcam:  
+    `python TFLite_detection_webcam.py`
+
+### **YOLOv8 (Recommended):**
+- Advanced real-time detection & voice feedback, run:  
+    `python YOLOV8_ADVANCED.py`
+
+_Refer to in-file comments for further usage details and customization._
+
+---
+
+## Raspberry Pi
+
+See `Raspberry_Pi_Guide.md` for step-by-step hardware setup and system configuration.
+
+---
+
+## Demo
+
+Demo/test videos provided: `Result Video 1.mp4`, `Video 2.mp4`
+
+---
+
+## Contribution
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## License
+
+MIT License
+
+---
+
+**If you like this project, please star ⭐ the repo!**
+
